@@ -1,6 +1,7 @@
 package ca.bcit.techpro.jason.physicssimulation;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -159,5 +160,15 @@ public class MainMenu extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    public void startGame(final View view){
+        Intent i = new Intent(MainMenu.this, Game.class);
+        startActivity(i);
+    }
+
+    public void startSettings(final View view){
+        Intent i = new Intent(MainMenu.this, SettingsMenu.class);
+        startActivity(i);
     }
 }

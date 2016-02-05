@@ -8,17 +8,47 @@
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <TextView
+    <RelativeLayout
         android:id="@+id/fullscreen_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:keepScreenOn="true"
-        android:text="@string/dummy_content"
-        android:textColor="#33b5e5"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="70dp"
+            android:text="Settings"
+            android:textSize="50dp"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"/>
 
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Fast speed"
+            android:id="@+id/buttonFast"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:tag="1"
+            android:onClick="onClick"/>
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Normal Speed"
+            android:id="@+id/buttonNormal"
+            android:layout_below="@+id/buttonFast"
+            android:layout_centerHorizontal="true"
+            android:tag="2"
+            android:onClick="onClick"/>
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Slow speed"
+            android:id="@+id/buttonSlow"
+            android:layout_below="@+id/buttonNormal"
+            android:layout_centerHorizontal="true"
+            android:tag="3"
+            android:onClick="onClick"/>
+    </RelativeLayout>
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
     <FrameLayout
@@ -42,7 +72,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dummy_button" />
+                />
 
         </LinearLayout>
     </FrameLayout>

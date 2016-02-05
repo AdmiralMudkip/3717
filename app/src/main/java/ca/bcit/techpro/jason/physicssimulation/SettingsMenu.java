@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.widget.TextView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -176,5 +177,17 @@ public class SettingsMenu extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    public void onClick(final View v){
+        Object c = v.getTag();
+        switch((String) c){
+            case "1":
+                Game.setS("slow");
+            case "2":
+                Game.setS("medium");
+            case "3":
+                Game.setS("fast");
+        }
     }
 }
