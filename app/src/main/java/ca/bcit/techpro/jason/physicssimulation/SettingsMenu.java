@@ -183,11 +183,13 @@ public class SettingsMenu extends AppCompatActivity {
         Object c = v.getTag();
         switch((String) c){
             case "1":
-                Game.setS("slow");
+                Game.setS("fast");
+                return;
             case "2":
                 Game.setS("medium");
+                return;
             case "3":
-                Game.setS("fast");
+                Game.setS("slow");
         }
     }
 }
