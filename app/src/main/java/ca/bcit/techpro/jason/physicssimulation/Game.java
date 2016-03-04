@@ -9,20 +9,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.TextureView;
 import android.view.MotionEvent;
 import android.widget.TextView;
-import android.graphics.Point;
 import android.widget.Toast;
 import android.graphics.Color;
 
-
-import java.util.ArrayList;
-import java.util.List;
 public class Game extends AppCompatActivity {
-    List<Point> pointList = new ArrayList<Point>();
+    public static Body[] bodyList;
     private CanvasView cVas;
 
+    public static final int LISTSIZE = 10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +39,7 @@ public class Game extends AppCompatActivity {
         });*/
 
         cVas = (CanvasView) findViewById(R.id.canvas);
+        bodyList = new Body[LISTSIZE];
     }
 
     private static String s = "medium";
@@ -56,6 +53,35 @@ public class Game extends AppCompatActivity {
     }
 }
 
+
+class Body {
+    private float x, y, xVel, yVel;
+    int mass;
+    public static final double pi = 3.14159;
+
+    public Body(float x, float y, int m){
+
+    }
+
+
+    static void updateVel() {
+        for (int i = 0; i < Game.LISTSIZE - 1; i++) {
+            for (int j = i + 1; j < Game.LISTSIZE - 1; j++) {
+                double angle = Math.atan((Game.bodyList[i].y - Game.bodyList[j].y / (Game.bodyList[j].x - Game.bodyList[i].x)) * 180 / pi);
+
+                double accel = Game.bodyList[j].mass * (Math.abs(Game.bodyList[i].x - Game.bodyList[j].x) * Math.abs(Game.bodyList[i].x - Game.bodyList[j].x) + Math.abs(Game.bodyList[i].y - Game.bodyList[j].y) * Math.abs(Game.bodyList[i].y - Game.bodyList[j].y));
+                Game.bodyList[i].xVel += Math.cos(angle) * accel;
+                Game.bodyList[i].yVel += Math.sin(angle) * accel;
+
+                angle += 180;
+                accel = accel / Game.bodyList[i].mass * Game.bodyList[j].mass;
+                Game.bodyList[j].xVel += Math.cos(angle) * accel;
+                Game.bodyList[j].yVel += Math.sin(angle) * accel;
+            }
+            Game.bodyList[i].x += Game.bodyList[i].xVel;
+            Game.bodyList[i].y += Game.bodyList[i].yVel;
+        }
+    }
 
 
  class CanvasView extends View {
