@@ -10,15 +10,22 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.MotionEvent;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.Color;
+
+import java.util.Timer;
 
 public class Game extends AppCompatActivity {
     public static Body[] bodyList;
     private CanvasView cVas;
 
-    public static final int LISTSIZE = 10;
+    Timer timer;
+    public static final int LISTSIZE = 10, SMALL = 5, MEDIUM = 10, LARGE = 20;
+    public static int INDEX = 0;
+    static short size = 2;
+    boolean add = true; //add or remove
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +47,8 @@ public class Game extends AppCompatActivity {
 
         cVas = (CanvasView) findViewById(R.id.canvas);
         bodyList = new Body[LISTSIZE];
+        timer = new Timer();
+        //timer.schedule(Body.updateVel();, INTERVAL);
     }
 
     private static String s = "medium";
@@ -48,8 +57,27 @@ public class Game extends AppCompatActivity {
         s = a;
     }
 
-    public void onClick(final View view){
-        System.out.println("goat");
+    void radioClick(View v){
+        Button b = (Button)v;
+        char key = b.getText().toString().charAt(0);
+
+        switch(key){
+            case 'S':
+                size = SMALL;
+                break;
+            case 'M':
+                size = MEDIUM;
+                break;
+            case 'L':
+                size = LARGE;
+                break;
+            case 'A':
+                add = true;
+                break;
+            case 'R':
+                add = false;
+                break;
+        }
     }
 }
 
@@ -59,14 +87,25 @@ class Body {
     int mass;
     public static final double pi = 3.14159;
 
-    public Body(float x, float y, int m){
+    public Body(float x, float y, int m) {
 
+    }
+
+    void updatePosition(){
+
+    }
+
+    double distanceBetween(Body b){
+        double dX = x - b.x;
+        double dY = y - b.y;
+
+        return Math.sqrt(dX*dX + dY * dY);
     }
 
 
     static void updateVel() {
-        for (int i = 0; i < Game.LISTSIZE - 1; i++) {
-            for (int j = i + 1; j < Game.LISTSIZE - 1; j++) {
+        for (int i = 0; i < Game.INDEX - 1; i++) {
+            for (int j = i + 1; j < Game.INDEX - 1; j++) {
                 double angle = Math.atan((Game.bodyList[i].y - Game.bodyList[j].y / (Game.bodyList[j].x - Game.bodyList[i].x)) * 180 / pi);
 
                 double accel = Game.bodyList[j].mass * (Math.abs(Game.bodyList[i].x - Game.bodyList[j].x) * Math.abs(Game.bodyList[i].x - Game.bodyList[j].x) + Math.abs(Game.bodyList[i].y - Game.bodyList[j].y) * Math.abs(Game.bodyList[i].y - Game.bodyList[j].y));
@@ -82,6 +121,7 @@ class Body {
             Game.bodyList[i].y += Game.bodyList[i].yVel;
         }
     }
+}
 
 
  class CanvasView extends View {
@@ -128,24 +168,28 @@ class Body {
         super.onDraw(canvas);
         // draw the mPath with the mPaint on the canvas when onDraw
         canvas.drawPath(mPath, mPaint);
+
     }
 
     // when ACTION_DOWN start touch according to the x,y values
     private void startTouch(float x, float y) {
-        mPath.moveTo(x, y);
+        //mPath.moveTo(x, y);
+        mPath.addCircle(x, y, Game.size, Path.Direction.CCW);
+        Game.bodyList[Game.INDEX++] = new Body(x, y, 2);
+
         mX = x;
         mY = y;
     }
 
     // when ACTION_MOVE move touch according to the x,y values
     private void moveTouch(float x, float y) {
-        float dx = Math.abs(x - mX);
+        /*float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mY);
         if (dx >= TOLERANCE || dy >= TOLERANCE) {
             mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
             mX = x;
             mY = y;
-        }
+        }*/
     }
 
     public void clearCanvas() {
@@ -155,7 +199,7 @@ class Body {
 
     // when ACTION_UP stop touch
     private void upTouch() {
-        mPath.lineTo(mX, mY);
+        //mPath.lineTo(mX, mY);
     }
 
     //override the onTouchEvent
