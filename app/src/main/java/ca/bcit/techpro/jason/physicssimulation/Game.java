@@ -104,8 +104,8 @@ class Body {
 
 
     static void updateVel() {
-        for (int i = 0; i < Game.INDEX - 1; i++) {
-            for (int j = i + 1; j < Game.INDEX - 1; j++) {
+        for (int i = 0; i < Game.INDEX; i++) {
+            for (int j = i + 1; j < Game.INDEX; j++) {
                 double angle = Math.atan((Game.bodyList[i].y - Game.bodyList[j].y / (Game.bodyList[j].x - Game.bodyList[i].x)) * 180 / pi);
 
                 double accel = Game.bodyList[j].mass * (Math.abs(Game.bodyList[i].x - Game.bodyList[j].x) * Math.abs(Game.bodyList[i].x - Game.bodyList[j].x) + Math.abs(Game.bodyList[i].y - Game.bodyList[j].y) * Math.abs(Game.bodyList[i].y - Game.bodyList[j].y));
@@ -113,7 +113,7 @@ class Body {
                 Game.bodyList[i].yVel += Math.sin(angle) * accel;
 
                 angle += 180;
-                accel = accel / Game.bodyList[i].mass * Game.bodyList[j].mass;
+                accel *= Game.bodyList[i].mass / Game.bodyList[j].mass;
                 Game.bodyList[j].xVel += Math.cos(angle) * accel;
                 Game.bodyList[j].yVel += Math.sin(angle) * accel;
             }
