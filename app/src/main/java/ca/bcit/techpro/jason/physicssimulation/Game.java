@@ -8,24 +8,25 @@ import android.graphics.Path;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
+import android.view.TextureView;
 import android.view.MotionEvent;
-import android.widget.Button;
 import android.widget.TextView;
+import android.graphics.Point;
 import android.widget.Toast;
 import android.graphics.Color;
 
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class Game extends AppCompatActivity {
-    public static Body[] bodyList;
     private CanvasView cVas;
 
-    Timer timer;
-    public static final int LISTSIZE = 10, SMALL = 5, MEDIUM = 10, LARGE = 20;
-    public static int INDEX = 0;
-    static short size = 2;
-    boolean add = true; //add or remove
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,98 +35,36 @@ public class Game extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         TextView t = (TextView)findViewById(R.id.fullscreen_text);
         t.setText(s);
-        /*((TextureView)findViewById(R.id.canvas)).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    pointList.add(new Point((int) event.getX(), (int) event.getY()));
-                    Toast.makeText(Game.this, "Touch coordinates : [" + (int) event.getX() + "," + (int) event.getY() + "]", Toast.LENGTH_SHORT).show();
-                }
-                return true;
-            }
-        });*/
-
         cVas = (CanvasView) findViewById(R.id.canvas);
-        bodyList = new Body[LISTSIZE];
-        timer = new Timer();
-        //timer.schedule(Body.updateVel();, INTERVAL);
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new Update(), 0, 17);
     }
-
+    class Update extends TimerTask {
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    cVas.physicsSim();
+                    cVas.invalidate();
+                }
+            });
+        }
+    }
     private static String s = "medium";
 
     public static void setS(String a){
         s = a;
     }
 
-    void radioClick(View v){
-        Button b = (Button)v;
-        char key = b.getText().toString().charAt(0);
-
-        switch(key){
-            case 'S':
-                size = SMALL;
-                break;
-            case 'M':
-                size = MEDIUM;
-                break;
-            case 'L':
-                size = LARGE;
-                break;
-            case 'A':
-                add = true;
-                break;
-            case 'R':
-                add = false;
-                break;
-        }
+    public void onClick(final View view){
+        System.out.println("goat");
     }
 }
 
 
-class Body {
-    private float x, y, xVel, yVel;
-    int mass;
-    public static final double pi = 3.14159;
 
-    public Body(float x, float y, int m) {
-
-    }
-
-    void updatePosition(){
-
-    }
-
-    double distanceBetween(Body b){
-        double dX = x - b.x;
-        double dY = y - b.y;
-
-        return Math.sqrt(dX*dX + dY * dY);
-    }
-
-
-    static void updateVel() {
-        for (int i = 0; i < Game.INDEX; i++) {
-            for (int j = i + 1; j < Game.INDEX; j++) {
-                double angle = Math.atan((Game.bodyList[i].y - Game.bodyList[j].y / (Game.bodyList[j].x - Game.bodyList[i].x)) * 180 / pi);
-
-                double accel = Game.bodyList[j].mass * (Math.abs(Game.bodyList[i].x - Game.bodyList[j].x) * Math.abs(Game.bodyList[i].x - Game.bodyList[j].x) + Math.abs(Game.bodyList[i].y - Game.bodyList[j].y) * Math.abs(Game.bodyList[i].y - Game.bodyList[j].y));
-                Game.bodyList[i].xVel += Math.cos(angle) * accel;
-                Game.bodyList[i].yVel += Math.sin(angle) * accel;
-
-                angle += 180;
-                accel *= Game.bodyList[i].mass / Game.bodyList[j].mass;
-                Game.bodyList[j].xVel += Math.cos(angle) * accel;
-                Game.bodyList[j].yVel += Math.sin(angle) * accel;
-            }
-            Game.bodyList[i].x += Game.bodyList[i].xVel;
-            Game.bodyList[i].y += Game.bodyList[i].yVel;
-        }
-    }
-}
-
-
- class CanvasView extends View {
-
+class CanvasView extends View {
+    Particle[] particleArray = new Particle[16];
     public int width;
     public int height;
     private Bitmap mBitmap;
@@ -150,80 +89,83 @@ class Body {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeWidth(4f);
-    }
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        width = metrics.widthPixels;
+        height = metrics.heightPixels;
 
-    // override onSizeChanged
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-
-        // your Canvas will draw onto the defined Bitmap
-        mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        mCanvas = new Canvas(mBitmap);
     }
 
     // override onDraw
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        // draw the mPath with the mPaint on the canvas when onDraw
+        mPath = new Path();
+        physicsSim();
+        for (int i = 0; i < particleArray.length; i++){
+            if (particleArray[i] != null) {
+                mPath.addCircle((int)particleArray[i].xPos, (int)particleArray[i].yPos, 10, Path.Direction.CCW);
+            } else {
+                break;
+            }
+        }
         canvas.drawPath(mPath, mPaint);
-
     }
 
     // when ACTION_DOWN start touch according to the x,y values
-    private void startTouch(float x, float y) {
-        //mPath.moveTo(x, y);
-        mPath.addCircle(x, y, Game.size, Path.Direction.CCW);
-        Game.bodyList[Game.INDEX++] = new Body(x, y, 2);
-
-        mX = x;
-        mY = y;
+    private void startTouch(int x, int y) {
+        for (int i = 0; i < particleArray.length; i++){
+            if (particleArray[i] == null) {
+                particleArray[i] = new Particle(x, y);
+                break;
+            }
+        }
     }
 
-    // when ACTION_MOVE move touch according to the x,y values
-    private void moveTouch(float x, float y) {
-        /*float dx = Math.abs(x - mX);
-        float dy = Math.abs(y - mY);
-        if (dx >= TOLERANCE || dy >= TOLERANCE) {
-            mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
-            mX = x;
-            mY = y;
-        }*/
-    }
-
-    public void clearCanvas() {
-        mPath.reset();
-        invalidate();
-    }
-
-    // when ACTION_UP stop touch
-    private void upTouch() {
-        //mPath.lineTo(mX, mY);
+    void physicsSim(){
+        for (int i = 0; i < particleArray.length; i++) {
+            for (int j = i+1; j < particleArray.length; j++) {
+                if (particleArray[i] != null && particleArray[j] != null) {
+                    double force = 10/Particle.distSq(particleArray[i], particleArray[j]);
+                    double angle = Particle.getAngle(particleArray[i], particleArray[j]);
+                    particleArray[i].xVel += force*Math.cos(angle);
+                    particleArray[i].yVel += force*Math.sin(angle);
+                    angle += 3.14159;
+                    particleArray[j].xVel += force*Math.cos(angle);
+                    particleArray[j].yVel += force*Math.sin(angle);
+                } else {
+                    break;
+                }
+            }
+        }
+        for (int i = 0; i < particleArray.length; i++) {
+            if (particleArray[i] != null) {
+                if (particleArray[i].xPos > width) {
+                    particleArray[i].xPos = width;
+                    particleArray[i].xVel = 0;
+                } else if (particleArray[i].xPos < 0) {
+                    particleArray[i].xPos = 0;
+                    particleArray[i].xVel = 0;
+                }
+                if (particleArray[i].yPos > height) {
+                    particleArray[i].yPos = height;
+                    particleArray[i].yVel = 0;
+                } else if (particleArray[i].yPos < 0) {
+                    particleArray[i].yPos = 0;
+                    particleArray[i].yVel = 0;
+                }
+                particleArray[i].updatePos();
+            } else {
+                break;
+            }
+        }
     }
 
     //override the onTouchEvent
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float x = event.getX();
-        float y = event.getY();
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                startTouch(x, y);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                moveTouch(x, y);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_UP:
-                upTouch();
-                invalidate();
-                break;
+        invalidate();
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            startTouch((int) event.getX(), (int) event.getY());
         }
-
-        Toast.makeText(getContext(), "Touch coordinates : [" + (int) event.getX() + "," + (int) event.getY() + "]", Toast.LENGTH_SHORT).show();
         return true;
     }
 }
