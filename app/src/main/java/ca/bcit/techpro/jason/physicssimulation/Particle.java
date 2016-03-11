@@ -5,7 +5,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 public class Particle {
-    static int G = 10;
+    static double G = 0.1;
     static int WIDTH;
     static int HEIGHT;
     public double xPos;
@@ -29,7 +29,7 @@ public class Particle {
 
 
     public static void updateVel(Particle p1, Particle p2){
-        double accel = G/Math.max((Math.pow(p1.xPos-p2.xPos,2)+Math.pow(p1.yPos-p2.yPos,2)), 900);
+        double accel = G/(Math.pow(p1.xPos-p2.xPos,2)+Math.pow(p1.yPos-p2.yPos,2));
         double angle = Math.atan2(p2.yPos - p1.yPos, p2.xPos - p1.xPos);
         double xAccel = accel*Math.cos(angle);
         double yAccel = accel*Math.sin(angle);
@@ -40,6 +40,7 @@ public class Particle {
     }
 
     public void updatePos(){
+        yVel = Math.min(yVel,2);
         if (xPos > WIDTH)
             xVel = -.5*Math.abs(xVel);
         else if (xPos < 0)

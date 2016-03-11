@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.MotionEvent;
+import android.widget.Button;
 import android.widget.TextView;
 import android.graphics.Color;
 import java.util.Timer;
@@ -47,13 +48,40 @@ public class Game extends AppCompatActivity {
     public static void setS(String a){
         s = a;
     }
+
+    public void radioClick(final View v){
+        Button b = (Button)v;
+        char key = b.getText().toString().charAt(0);
+
+        switch(key){
+            case 'S':
+                cVas.size = 10;
+                break;
+            case 'M':
+                cVas.size = 100;
+                break;
+            case 'L':
+                cVas.size = 1000;
+                break;
+            case 'A':
+                cVas.add = true;
+                break;
+            case 'R':
+                cVas.add = false;
+                break;
+        }
+    }
 }
 
+
+
 class CanvasView extends View {
-    Particle[] particleArray = new Particle[8];
+    Particle[] particleArray = new Particle[64];
     private Path mPath;
     Context context;
     private Paint mPaint;
+    public int size = 100;
+    public boolean add = true;
 
     public CanvasView(Context c, AttributeSet attrs) {
         super(c, attrs);
@@ -75,42 +103,36 @@ class CanvasView extends View {
     // override onDraw
     @Override
     protected void onDraw(Canvas canvas) {
-        mPath = new Path();
-        physicsSim();
+        mPath.reset();
         for (int i = 0; i < particleArray.length; i++){
-            if (particleArray[i] != null) {
-                mPath.addCircle((int)particleArray[i].xPos, (int)particleArray[i].yPos, 10, Path.Direction.CCW);
-            } else {
-                break;
-            }
+            if (particleArray[i] != null)
+                mPath.addCircle((int)particleArray[i].xPos, (int)particleArray[i].yPos, (float)(Math.sqrt(particleArray[i].mass)), Path.Direction.CCW);
         }
         canvas.drawPath(mPath, mPaint);
     }
 
     void physicsSim(){
         for (int i = 0; i < particleArray.length; i++)
-            for (int j = i+1; j < particleArray.length; j++)
-                if (particleArray[i] != null && particleArray[j] != null)
-                    Particle.updateVel(particleArray[i],particleArray[j]);
-                else
-                    break;
+            if (particleArray[i] != null)
+                for (int j = i+1; j < particleArray.length; j++)
+                    if (particleArray[j] != null)
+                        Particle.updateVel(particleArray[i],particleArray[j]);
 
         for (int i = 0; i < particleArray.length; i++)
             if (particleArray[i] != null)
                 particleArray[i].updatePos();
-            else
-                break;
     }
 
     //override the onTouchEvent
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        invalidate();
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            for (int i = 0; i < particleArray.length; i++){
-                if (particleArray[i] == null) {
-                    particleArray[i] = new Particle(event.getX(), event.getY(), 1);
-                    break;
+            if (add) {
+                for (int i = 0; i < particleArray.length; i++) {
+                    if (particleArray[i] == null) {
+                        particleArray[i] = new Particle(event.getX(), event.getY(), size);
+                        break;
+                    }
                 }
             }
         }

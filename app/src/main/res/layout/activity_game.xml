@@ -50,7 +50,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="30dp"
-                    />
+                    android:onClick="radioClick" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -60,7 +60,8 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginLeft="12dp"
-                    android:checked="true" />
+                    android:checked="true"
+                    android:onClick="radioClick" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -69,7 +70,8 @@
                     android:id="@+id/radioButton3"
                     android:layout_marginTop="20dp"
                     android:layout_marginStart="10dp"
-                    android:layout_marginLeft="12dp"/>
+                    android:layout_marginLeft="12dp"
+                    android:onClick="radioClick" />
 
             </RadioGroup>
             <RadioGroup
@@ -87,14 +89,16 @@
                     android:id="@+id/radioButton4"
                     android:layout_marginEnd="40dp"
                     android:layout_marginRight="40dp"
-                    android:checked="true" />
+                    android:checked="true"
+                    android:onClick="radioClick" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Remove"
                     android:id="@+id/radioButton5"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginBottom="4dp"
+                    android:onClick="radioClick" />
             </RadioGroup>
         </RelativeLayout>
 
