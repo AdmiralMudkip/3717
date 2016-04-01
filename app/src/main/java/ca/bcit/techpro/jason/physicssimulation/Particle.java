@@ -40,6 +40,22 @@ public class Particle {
             p2.yVel -= yAccel * p1.mass;
     }
 
+    public static void merge(Particle p1, Particle p2) {
+        if (p1.mass == p2.mass) {
+            p1.xPos = (p1.xPos+p2.xPos)/2;
+            p1.yPos = (p1.yPos+p2.yPos)/2;
+        }
+        else if (p1.mass < p2.mass) {
+            p1.xPos = p2.xPos;
+            p1.yPos = p2.yPos;
+        }
+        double xVel = p1.xVel*p1.mass+p2.xVel*p2.mass;
+        double yVel = p1.yVel*p1.mass+p2.yVel*p2.mass;
+        p1.mass += p2.mass;
+        p1.xVel = xVel/p1.mass;
+        p1.yVel = yVel/p1.mass;
+    }
+
     public void updatePos(){
         yVel = Math.min(yVel,2);
         if (xPos > WIDTH)

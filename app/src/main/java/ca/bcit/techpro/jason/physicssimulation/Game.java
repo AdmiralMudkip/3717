@@ -120,19 +120,7 @@ class CanvasView extends View {
                             Particle.updateVel(particleArray[i], particleArray[j]);
                         }
                         else {
-                            if (particleArray[i].mass == particleArray[j].mass) {
-                                particleArray[i].xPos = (particleArray[i].xPos+particleArray[j].xPos)/2;
-                                particleArray[i].yPos = (particleArray[i].yPos+particleArray[j].yPos)/2;
-                            }
-                            else if (particleArray[i].mass < particleArray[j].mass) {
-                                particleArray[i].xPos = particleArray[j].xPos;
-                                particleArray[i].yPos = particleArray[j].yPos;
-                            }
-                            double xVel = particleArray[i].xVel*particleArray[i].mass+particleArray[j].xVel*particleArray[j].mass;
-                            double yVel = particleArray[i].yVel*particleArray[i].mass+particleArray[j].yVel*particleArray[j].mass;
-                            particleArray[i].mass += particleArray[j].mass;
-                            particleArray[i].xVel = xVel/particleArray[i].mass;
-                            particleArray[i].yVel = yVel/particleArray[i].mass;
+                            Particle.merge(particleArray[i], particleArray[j]);
                             particleArray[j] = null;
                         }
 
