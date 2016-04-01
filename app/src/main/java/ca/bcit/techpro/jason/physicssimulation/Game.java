@@ -106,7 +106,7 @@ class CanvasView extends View {
         mPath.reset();
         for (int i = 0; i < particleArray.length; i++){
             if (particleArray[i] != null)
-                mPath.addCircle((int)particleArray[i].xPos, (int)particleArray[i].yPos, (float)(Math.sqrt(particleArray[i].mass)), Path.Direction.CCW);
+                mPath.addCircle((int)particleArray[i].xPos, (int)particleArray[i].yPos, (float)(Math.sqrt(particleArray[i].mass)/5), Path.Direction.CCW);
         }
         canvas.drawPath(mPath, mPaint);
     }
@@ -116,21 +116,44 @@ class CanvasView extends View {
             if (particleArray[i] != null)
                 for (int j = i+1; j < particleArray.length; j++)
                     if (particleArray[j] != null)
-                        Particle.updateVel(particleArray[i],particleArray[j]);
+                        if (Math.sqrt(Math.pow(particleArray[i].xPos-particleArray[j].xPos,2)+Math.pow(particleArray[i].yPos-particleArray[j].yPos,2)) > (Math.sqrt(particleArray[i].mass)+Math.sqrt(particleArray[j].mass))/5) {
+                            Particle.updateVel(particleArray[i], particleArray[j]);
+                        }
+                        else {
+                            if (particleArray[i].mass == particleArray[j].mass) {
+                                particleArray[i].xPos = (particleArray[i].xPos+particleArray[j].xPos)/2;
+                                particleArray[i].yPos = (particleArray[i].yPos+particleArray[j].yPos)/2;
+                            }
+                            else if (particleArray[i].mass < particleArray[j].mass) {
+                                particleArray[i].xPos = particleArray[j].xPos;
+                                particleArray[i].yPos = particleArray[j].yPos;
+                            }
+                            double xVel = particleArray[i].xVel*particleArray[i].mass+particleArray[j].xVel*particleArray[j].mass;
+                            double yVel = particleArray[i].yVel*particleArray[i].mass+particleArray[j].yVel*particleArray[j].mass;
+                            particleArray[i].mass += particleArray[j].mass;
+                            particleArray[i].xVel = xVel/particleArray[i].mass;
+                            particleArray[i].yVel = yVel/particleArray[i].mass;
+                            particleArray[j] = null;
+                        }
 
         for (int i = 0; i < particleArray.length; i++)
             if (particleArray[i] != null)
                 particleArray[i].updatePos();
     }
 
+    private float x, y;
     //override the onTouchEvent
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            x = event.getX();
+            y = event.getY();
+        }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             if (add) {
                 for (int i = 0; i < particleArray.length; i++) {
                     if (particleArray[i] == null) {
-                        particleArray[i] = new Particle(event.getX(), event.getY(), size);
+                        particleArray[i] = new Particle(event.getX(), event.getY(), (x-event.getX())/32, (y-event.getY())/32, size);
                         break;
                     }
                 }
