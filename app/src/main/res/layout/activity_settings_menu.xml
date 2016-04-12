@@ -16,13 +16,16 @@
             android:text="Settings"
             android:textSize="50dp"
             android:textAlignment="center"
+            android:id="@+id/SettingsText"
             android:layout_centerHorizontal="true"/>
 
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Fast speed"
-            android:id="@+id/buttonFast"
+            android:text="Slow speed"
+            android:id="@+id/buttonSlow"
+            android:layout_below="@+id/SettingsText"
+            android:layout_marginTop="60dp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:tag="1"
@@ -32,18 +35,36 @@
             android:layout_height="wrap_content"
             android:text="Normal Speed"
             android:id="@+id/buttonNormal"
-            android:layout_below="@+id/buttonFast"
+            android:layout_below="@+id/buttonSlow"
             android:layout_centerHorizontal="true"
             android:tag="2"
             android:onClick="onClick"/>
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Slow speed"
-            android:id="@+id/buttonSlow"
+            android:text="Fast speed"
+            android:id="@+id/buttonFast"
             android:layout_below="@+id/buttonNormal"
             android:layout_centerHorizontal="true"
             android:tag="3"
+            android:onClick="onClick"/>
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Ludicrous Speed"
+            android:id="@+id/buttonLudicrous"
+            android:layout_below="@+id/buttonFast"
+            android:layout_centerHorizontal="true"
+            android:tag="4"
+            android:onClick="onClick"/>
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Gone to Plaid"
+            android:id="@+id/buttonPlaid"
+            android:layout_below="@+id/buttonLudicrous"
+            android:layout_centerHorizontal="true"
+            android:tag="5"
             android:onClick="onClick"/>
     </RelativeLayout>
 
