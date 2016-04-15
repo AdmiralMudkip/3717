@@ -110,7 +110,7 @@ public class Game extends AppCompatActivity {
 
 class CanvasView extends View {
     // used for calculating diameter of circle
-    final double oneOverPi = 1/Math.PI;
+
     public static final int MAXIMUM_PARTICLES = 64;
     // scale the touches to remove, since the small particles are really small
     Particle[] particleArray = new Particle[MAXIMUM_PARTICLES];
@@ -152,7 +152,7 @@ class CanvasView extends View {
         mPath.reset();
         for (int i = 0; i < particleArray.length; i++){
             if (particleArray[i] != null) {
-                mPath.addCircle((int) particleArray[i].xPosition, (int) particleArray[i].yPosition, (float) Math.sqrt(particleArray[i].mass * oneOverPi), Path.Direction.CCW);
+                mPath.addCircle((int) particleArray[i].xPosition, (int) particleArray[i].yPosition, particleArray[i].radius, Path.Direction.CCW);
             }
         }
         canvas.drawPath(mPath, mPaint);
@@ -169,7 +169,7 @@ class CanvasView extends View {
             if (particleArray[i] != null) {
                 for (int j = i + 1; j < particleArray.length; j++) {
                     if (particleArray[j] != null) {
-                        if (Math.sqrt(Math.pow(particleArray[i].xPosition - particleArray[j].xPosition, 2) + Math.pow(particleArray[i].yPosition - particleArray[j].yPosition, 2)) > (Math.sqrt(particleArray[i].mass * oneOverPi) + Math.sqrt(particleArray[j].mass * oneOverPi))) {
+                        if (Math.sqrt(Math.pow(particleArray[i].xPosition - particleArray[j].xPosition, 2) + Math.pow(particleArray[i].yPosition - particleArray[j].yPosition, 2)) > particleArray[i].radius + particleArray[j].radius) {
                             Particle.updateVelocity(particleArray[i], particleArray[j]);
                         } else if (merge) {
                             Particle.merge(particleArray[i], particleArray[j]);
@@ -197,7 +197,7 @@ class CanvasView extends View {
             if (!add){
                 for (int i = 0; i < particleArray.length; i++) {
                     // calc the position of the touch relative to any object in the array
-                    if (particleArray[i] != null && (Math.pow(particleArray[i].xPosition - x, 2) + Math.pow(particleArray[i].yPosition - y, 2)) < (particleArray[i].mass*oneOverPi)) {
+                    if (particleArray[i] != null && (Math.pow(particleArray[i].xPosition - x, 2) + Math.pow(particleArray[i].yPosition - y, 2)) < particleArray[i].radius) {
                         // i'd destroy the particle if i could, but java doesn't use destructors
                         // garbage collection pls
                         particleArray[i] = null;

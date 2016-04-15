@@ -1,8 +1,10 @@
 package ca.bcit.techpro.jason.physicssimulation;
 
 public class Particle {
+    private static final double ONE_OVER_PI = 1/Math.PI;
     private static final int DISTANCE_SCALE = 14;
     public double xPosition, yPosition, xVelocity, yVelocity;
+    public float radius;
     public boolean stationary;
     public int mass;
 
@@ -12,6 +14,7 @@ public class Particle {
         xVelocity = xv;
         yVelocity = yv;
         mass = m;
+        radius = (float) Math.sqrt(mass * ONE_OVER_PI);
     }
 
     // updates the velocity of two particles, getting the distance between them,
@@ -54,6 +57,7 @@ public class Particle {
         double xVelocity = p1.xVelocity * p1.mass + p2.xVelocity * p2.mass;
         double yVelocity = p1.yVelocity * p1.mass + p2.yVelocity * p2.mass;
         p1.mass += p2.mass;
+        p1.radius = (float) Math.sqrt(p1.mass * ONE_OVER_PI);
         p1.xVelocity = xVelocity / p1.mass;
         p1.yVelocity = yVelocity / p1.mass;
     }
