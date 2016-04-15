@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PhysicsSimulation</string>
+    <string name="app_name">Physics Simulation</string>
     <string name="title_activity_main_menu">MainMenu</string>
     <string name="title_activity_settings_menu">SettingsMenu</string>
 
