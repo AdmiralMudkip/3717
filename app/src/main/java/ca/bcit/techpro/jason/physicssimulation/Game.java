@@ -58,17 +58,16 @@ public class Game extends AppCompatActivity {
                 cVas.particleArray[0].stationary = true;
         }
 
-
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new Update(), 0, update); //update, time to first update, update interval
     }
 
     class Update extends TimerTask {
         public void run() {
+            cVas.physicsSim();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    cVas.physicsSim();
                     cVas.invalidate();
                 }
             });
@@ -110,10 +109,10 @@ public class Game extends AppCompatActivity {
 
 
 class CanvasView extends View {
+    // used for calculating diameter of circle
+    final double oneOverPi = 1/Math.PI;
     public static final int MAXIMUM_PARTICLES = 64;
     // scale the touches to remove, since the small particles are really small
-    public static final double TOUCH_SCALER = 1.3;
-    final double oneOverPi = 1/Math.PI;
     Particle[] particleArray = new Particle[MAXIMUM_PARTICLES];
 
     Context context;
@@ -125,8 +124,7 @@ class CanvasView extends View {
 
     public static int SCREEN_WIDTH, SCREEN_HEIGHT, valveCounter = 0;
 
-    public boolean add = true, stationary = false;
-    public static boolean merge = true;
+    public boolean add = true, stationary = false, merge = true;
 
     public CanvasView(Context c, AttributeSet attrs) {
         super(c, attrs);
@@ -153,8 +151,9 @@ class CanvasView extends View {
     protected void onDraw(Canvas canvas) {
         mPath.reset();
         for (int i = 0; i < particleArray.length; i++){
-            if (particleArray[i] != null)
-                mPath.addCircle((int)particleArray[i].xPosition, (int)particleArray[i].yPosition, (float) Math.sqrt(particleArray[i].mass*oneOverPi), Path.Direction.CCW);
+            if (particleArray[i] != null) {
+                mPath.addCircle((int) particleArray[i].xPosition, (int) particleArray[i].yPosition, (float) Math.sqrt(particleArray[i].mass * oneOverPi), Path.Direction.CCW);
+            }
         }
         canvas.drawPath(mPath, mPaint);
     }
@@ -166,21 +165,26 @@ class CanvasView extends View {
             return;
         }
         // has to be done twice.  First, apply all the forces to everything from everything else
-        for (int i = 0; i < particleArray.length; i++)
-            if (particleArray[i] != null)
-                for (int j = i+1; j < particleArray.length; j++)
-                    if (particleArray[j] != null)
-                        if (Math.pow(particleArray[i].xPosition-particleArray[j].xPosition,2)+Math.pow(particleArray[i].yPosition-particleArray[j].yPosition,2) > Math.sqrt(particleArray[i].mass*oneOverPi)+Math.sqrt(particleArray[j].mass*oneOverPi)) {
+        for (int i = 0; i < particleArray.length-1; i++) {
+            if (particleArray[i] != null) {
+                for (int j = i + 1; j < particleArray.length; j++) {
+                    if (particleArray[j] != null) {
+                        if (Math.sqrt(Math.pow(particleArray[i].xPosition - particleArray[j].xPosition, 2) + Math.pow(particleArray[i].yPosition - particleArray[j].yPosition, 2)) > (Math.sqrt(particleArray[i].mass * oneOverPi) + Math.sqrt(particleArray[j].mass * oneOverPi))) {
                             Particle.updateVelocity(particleArray[i], particleArray[j]);
-                        }
-                        else if (merge){
+                        } else if (merge) {
                             Particle.merge(particleArray[i], particleArray[j]);
                             particleArray[j] = null;
                         }
+                    }
+                }
+            }
+        }
         // secondly, update the positions
-        for (int i = 0; i < particleArray.length; i++)
-            if (particleArray[i] != null)
+        for (int i = 0; i < particleArray.length; i++) {
+            if (particleArray[i] != null) {
                 particleArray[i].updatePos();
+            }
+        }
     }
 
 
@@ -190,6 +194,17 @@ class CanvasView extends View {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             x = event.getX();
             y = event.getY();
+            if (!add){
+                for (int i = 0; i < particleArray.length; i++) {
+                    // calc the position of the touch relative to any object in the array
+                    if (particleArray[i] != null && (Math.pow(particleArray[i].xPosition - x, 2) + Math.pow(particleArray[i].yPosition - y, 2)) < (particleArray[i].mass*oneOverPi)) {
+                        // i'd destroy the particle if i could, but java doesn't use destructors
+                        // garbage collection pls
+                        particleArray[i] = null;
+                        break;
+                    }
+                }
+            }
         }
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -200,18 +215,9 @@ class CanvasView extends View {
                         // ctor to create a new particle, also checks the ending position, and adds
                         // force if there's a difference between the start and end positions
                         particleArray[i] = new Particle(event.getX(), event.getY(), (x-event.getX())/32, (y-event.getY())/32, size);
-                        if (stationary)
+                        if (stationary) {
                             particleArray[i].stationary = true;
-                        break;
-                    }
-                }
-            } else {
-                for (int i = 0; i < particleArray.length; i++) {
-                    // calc the position of the touch relative to any object in the array
-                    if (particleArray[i] != null && Math.abs(particleArray[i].xPosition - x) < particleArray[i].mass * TOUCH_SCALER && Math.abs((particleArray[i].yPosition - y)) < particleArray[i].mass * TOUCH_SCALER) {
-                        // i'd destroy the particle if i could, but java doesn't use destructors
-                        // garbage collection pls
-                        particleArray[i] = null;
+                        }
                         break;
                     }
                 }

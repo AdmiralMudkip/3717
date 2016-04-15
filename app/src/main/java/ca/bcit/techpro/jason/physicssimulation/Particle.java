@@ -19,9 +19,9 @@ public class Particle {
         double distanceX = p2.xPosition - p1.xPosition;
         double distanceY = p2.yPosition - p1.yPosition;
         double distanceSquared = 14*(distanceX*distanceX + distanceY*distanceY);
-        double distanceCubed = distanceSquared*Math.sqrt(distanceSquared);
-        double xAcceleration = distanceX / distanceCubed;
-        double yAcceleration = distanceY / distanceCubed;
+        double oneOverDistanceCubed = 1/(distanceSquared*Math.sqrt(distanceSquared));
+        double xAcceleration = distanceX * oneOverDistanceCubed;
+        double yAcceleration = distanceY * oneOverDistanceCubed;
 
         if (!p1.stationary) {
             p1.xVelocity += xAcceleration * p2.mass;
@@ -36,8 +36,9 @@ public class Particle {
     // merge particles, checking the size of them to properly simulate the conservation of momentum
     // this function expects p2 to be set to null afterwards
     public static void merge(Particle p1, Particle p2) {
-        if (p2.stationary)
+        if (p2.stationary) {
             p1.stationary = true;
+        }
 
         //sets which particles' location is used based on which has the larger mass
         if (p1.mass == p2.mass) {
@@ -61,16 +62,18 @@ public class Particle {
     public void updatePos(){
         if (!stationary) {
             //if out of bounds on X axis puts back inside and sets xVelocity appropriately
-            if (xPosition > CanvasView.SCREEN_WIDTH)
+            if (xPosition > CanvasView.SCREEN_WIDTH) {
                 xVelocity = -Math.abs(xVelocity);
-            else if (xPosition < 0)
+            } else if (xPosition < 0) {
                 xVelocity = Math.abs(xVelocity);
+            }
 
             //if out of bounds on Y axis puts back inside and sets yVelocity appropriately
-            if (yPosition > CanvasView.SCREEN_HEIGHT)
+            if (yPosition > CanvasView.SCREEN_HEIGHT) {
                 yVelocity = -Math.abs(yVelocity);
-            else if (yPosition < 0)
+            } else if (yPosition < 0) {
                 yVelocity = Math.abs(yVelocity);
+            }
 
             //updates position based on velocity
             xPosition += xVelocity;
