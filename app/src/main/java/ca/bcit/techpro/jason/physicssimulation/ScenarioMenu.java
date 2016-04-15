@@ -14,6 +14,7 @@ public class ScenarioMenu extends AppCompatActivity {
         setContentView(R.layout.activity_scenario_menu);
     }
 
+    // handler for all the buttons, relatively extendable
     public void onClick(final View v){
         switch((String)v.getTag()){
             case "1":

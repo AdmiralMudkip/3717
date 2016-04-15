@@ -17,7 +17,7 @@ public class MainMenu extends AppCompatActivity {
 
     // controllers for buttons, nothing interesting
     public void startGame(final View view){
-        Game.setScenario(0);
+        Game.setScenario(0); // disable any scenarios
         Intent i = new Intent(MainMenu.this, Game.class);
         startActivity(i);
     }

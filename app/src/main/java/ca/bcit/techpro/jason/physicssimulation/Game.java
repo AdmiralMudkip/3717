@@ -32,15 +32,18 @@ public class Game extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_game);
 
+        cVas = (CanvasView) findViewById(R.id.canvas);
+        cVas.size = MEDIUM;
+
+        // gone to plaid enabled
         if (update == 2){
             FrameLayout f = (FrameLayout)findViewById(R.id.Background);
+            cVas.mPaint.setColor(Color.WHITE);
             f.setBackgroundResource(R.drawable.gonetoplaid);
             setContentView(f);
         }
 
-        cVas = (CanvasView) findViewById(R.id.canvas);
-        cVas.size = MEDIUM;
-
+        // load particle array with preset data based on the loaded scenario
         switch (scenario) {
             case 0:
                 break;
@@ -117,13 +120,13 @@ class CanvasView extends View {
 
     Context context;
     private Path mPath;
-    private Paint mPaint;
+    public Paint mPaint;
 
     public int size;
     private float x, y;
 
     public static int SCREEN_WIDTH, SCREEN_HEIGHT, FAT_FINGER_DISTANCE;
-    public int valveCounter = 0;
+    public short valveCounter = 0;
     public boolean add = true, stationary = false, merge = true;
 
     public CanvasView(Context c, AttributeSet attrs) {
@@ -143,6 +146,8 @@ class CanvasView extends View {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         SCREEN_WIDTH = metrics.widthPixels;
         SCREEN_HEIGHT = metrics.heightPixels;
+
+        // touch scaler, increase the touchable area to remove objects
         FAT_FINGER_DISTANCE = (int)(8*metrics.density);
     }
 
@@ -161,6 +166,7 @@ class CanvasView extends View {
 
     // run through the entire loop,
     void physicsSim(){
+        // skip every third frame
         if (Game.valveTime && valveCounter++ == 2){
             valveCounter = 0;
             return;
@@ -188,7 +194,6 @@ class CanvasView extends View {
         }
     }
 
-
     //override the onTouchEvent
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -199,7 +204,7 @@ class CanvasView extends View {
                 for (int i = 0; i < particleArray.length; i++) {
                     // calc the position of the touch relative to any object in the array
                     if (particleArray[i] != null && Math.sqrt((Math.pow(particleArray[i].xPosition - x, 2) + Math.pow(particleArray[i].yPosition - y, 2))) < particleArray[i].radius+FAT_FINGER_DISTANCE) {
-                        // i'd destroy the particle if i could, but java doesn't use destructors
+                        // i'd destroy the particle if I could, but Java doesn't use destructors
                         // garbage collection pls
                         particleArray[i] = null;
                         break;
@@ -207,7 +212,6 @@ class CanvasView extends View {
                 }
             }
         }
-
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (add) {
                 for (int i = 0; i < particleArray.length; i++) {
@@ -215,7 +219,7 @@ class CanvasView extends View {
                     if (particleArray[i] == null) {
                         // ctor to create a new particle, also checks the ending position, and adds
                         // force if there's a difference between the start and end positions
-                        particleArray[i] = new Particle(event.getX(), event.getY(), (x-event.getX())/32, (y-event.getY())/32, size);
+                        particleArray[i] = new Particle(x, y, (x-event.getX())/32, (y-event.getY())/32, size);
                         if (stationary) {
                             particleArray[i].stationary = true;
                         }

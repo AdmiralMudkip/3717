@@ -3,6 +3,7 @@
     <string name="title_activity_main_menu">MainMenu</string>
     <string name="title_activity_settings_menu">SettingsMenu</string>
 
+    <!--Game-->
     <string name="S">S</string>
     <string name="M">M</string>
     <string name="L">L</string>
