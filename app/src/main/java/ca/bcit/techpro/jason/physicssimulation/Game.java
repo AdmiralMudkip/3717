@@ -10,16 +10,19 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.MotionEvent;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.graphics.Color;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Game extends AppCompatActivity {
+    //preset sizes for particles
+    private static final int SMALL = 10;
+    private static final int MEDIUM = 100;
+    private static final int LARGE = 1000;
     private static int update = 10;
     private static int scenario = 0;
+    static boolean valveTime = false;
     private CanvasView cVas;
 
     @Override
@@ -35,17 +38,27 @@ public class Game extends AppCompatActivity {
             setContentView(f);
         }
 
+        cVas = (CanvasView) findViewById(R.id.canvas);
+        cVas.size = MEDIUM;
+
         switch (scenario) {
             case 0:
                 break;
             case 1: // binary system
-
+                cVas.particleArray[0] = new Particle(CanvasView.SCREEN_WIDTH/2, CanvasView.SCREEN_HEIGHT/2-20, .6, 0, 1000);
+                cVas.particleArray[1] = new Particle(CanvasView.SCREEN_WIDTH/2, CanvasView.SCREEN_HEIGHT/2+20, -.6, 0, 1000);
+                break;
             case 2: // elliptical orbit
-
+                cVas.particleArray[0] = new Particle(CanvasView.SCREEN_WIDTH/2, CanvasView.SCREEN_HEIGHT/2, 0, 0, 4000);
+                cVas.particleArray[0].stationary = true;
+                cVas.particleArray[1] = new Particle(CanvasView.SCREEN_WIDTH/2, CanvasView.SCREEN_HEIGHT/2+60, -1.4, 0, 100);
+                break;
             case 3: // no escape
+                cVas.particleArray[0] = new Particle(CanvasView.SCREEN_WIDTH/2, CanvasView.SCREEN_HEIGHT/2, 0, 0, 100000);
+                cVas.particleArray[0].stationary = true;
         }
 
-        cVas = (CanvasView) findViewById(R.id.canvas);
+
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new Update(), 0, update); //update, time to first update, update interval
     }
@@ -64,18 +77,19 @@ public class Game extends AppCompatActivity {
 
     public static void setUpdate(int i) { update = i; }
     public static void setScenario(int i) { scenario = i; }
+    public static void updateValveTime() { valveTime = !valveTime; }
 
     // handle all the radio buttons
     public void radioClick(final View v){
         switch((String)v.getTag()){
             case "S":
-                cVas.size = 10;
+                cVas.size = SMALL;
                 break;
             case "M":
-                cVas.size = 100;
+                cVas.size = MEDIUM;
                 break;
             case "L":
-                cVas.size = 1000;
+                cVas.size = LARGE;
                 break;
             case "A":
                 cVas.add = true;
@@ -99,17 +113,17 @@ class CanvasView extends View {
     public static final int MAXIMUM_PARTICLES = 64;
     // scale the touches to remove, since the small particles are really small
     public static final double TOUCH_SCALER = 1.3;
-    public static final double G = 0.5; // gravitational constant
+    final double oneOverPi = 1/Math.PI;
     Particle[] particleArray = new Particle[MAXIMUM_PARTICLES];
 
-    private Path mPath;
     Context context;
+    private Path mPath;
     private Paint mPaint;
 
-    public int size = 100;
+    public int size;
     private float x, y;
 
-    public static int SCREEN_WIDTH, SCREEN_HEIGHT;
+    public static int SCREEN_WIDTH, SCREEN_HEIGHT, valveCounter = 0;
 
     public boolean add = true, stationary = false;
     public static boolean merge = true;
@@ -140,20 +154,24 @@ class CanvasView extends View {
         mPath.reset();
         for (int i = 0; i < particleArray.length; i++){
             if (particleArray[i] != null)
-                mPath.addCircle((int)particleArray[i].xPos, (int)particleArray[i].yPos, (float)(Math.sqrt(particleArray[i].mass)/2), Path.Direction.CCW);
+                mPath.addCircle((int)particleArray[i].xPosition, (int)particleArray[i].yPosition, (float) Math.sqrt(particleArray[i].mass*oneOverPi), Path.Direction.CCW);
         }
         canvas.drawPath(mPath, mPaint);
     }
 
     // run through the entire loop,
     void physicsSim(){
+        if (Game.valveTime && valveCounter++ == 2){
+            valveCounter = 0;
+            return;
+        }
         // has to be done twice.  First, apply all the forces to everything from everything else
         for (int i = 0; i < particleArray.length; i++)
             if (particleArray[i] != null)
                 for (int j = i+1; j < particleArray.length; j++)
                     if (particleArray[j] != null)
-                        if (Math.sqrt(Math.pow(particleArray[i].xPos-particleArray[j].xPos,2)+Math.pow(particleArray[i].yPos-particleArray[j].yPos,2)) > (Math.sqrt(particleArray[i].mass)+Math.sqrt(particleArray[j].mass))/2) {
-                            Particle.updateVel(particleArray[i], particleArray[j]);
+                        if (Math.pow(particleArray[i].xPosition-particleArray[j].xPosition,2)+Math.pow(particleArray[i].yPosition-particleArray[j].yPosition,2) > Math.sqrt(particleArray[i].mass*oneOverPi)+Math.sqrt(particleArray[j].mass*oneOverPi)) {
+                            Particle.updateVelocity(particleArray[i], particleArray[j]);
                         }
                         else if (merge){
                             Particle.merge(particleArray[i], particleArray[j]);
@@ -182,13 +200,15 @@ class CanvasView extends View {
                         // ctor to create a new particle, also checks the ending position, and adds
                         // force if there's a difference between the start and end positions
                         particleArray[i] = new Particle(event.getX(), event.getY(), (x-event.getX())/32, (y-event.getY())/32, size);
+                        if (stationary)
+                            particleArray[i].stationary = true;
                         break;
                     }
                 }
             } else {
                 for (int i = 0; i < particleArray.length; i++) {
                     // calc the position of the touch relative to any object in the array
-                    if (particleArray[i] != null && Math.abs(particleArray[i].xPos - x) < particleArray[i].mass * TOUCH_SCALER && Math.abs((particleArray[i].yPos - y)) < particleArray[i].mass * TOUCH_SCALER) {
+                    if (particleArray[i] != null && Math.abs(particleArray[i].xPosition - x) < particleArray[i].mass * TOUCH_SCALER && Math.abs((particleArray[i].yPosition - y)) < particleArray[i].mass * TOUCH_SCALER) {
                         // i'd destroy the particle if i could, but java doesn't use destructors
                         // garbage collection pls
                         particleArray[i] = null;
