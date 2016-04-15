@@ -3,6 +3,7 @@ package ca.bcit.techpro.jason.physicssimulation;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 public class SettingsMenu extends AppCompatActivity {
 
@@ -29,6 +30,11 @@ public class SettingsMenu extends AppCompatActivity {
                 return;
             case "5":
                 Game.setUpdate(2);
+
+            case "6":
+                Game.updateValveTime();
+                String s = (Game.valveTime) ? "enabled" : "disabled";
+                Toast.makeText(this, "Valve time is " + s, Toast.LENGTH_SHORT).show();
         }
     }
 }

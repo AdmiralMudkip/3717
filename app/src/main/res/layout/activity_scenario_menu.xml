@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="70dp"
-            android:text="Scenario Select"
+            android:text="@string/ScenarioTitle"
             android:textSize="50dp"
             android:textAlignment="center"
             android:id="@+id/ScenarioText"
@@ -22,7 +22,7 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Binary System"
+            android:text="@string/Scen1"
             android:id="@+id/buttonSlow"
             android:layout_below="@+id/ScenarioText"
             android:layout_marginTop="90dp"
@@ -33,7 +33,7 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Elliptical Orbit"
+            android:text="@string/Scen2"
             android:id="@+id/buttonNormal"
             android:layout_below="@+id/buttonSlow"
             android:layout_centerHorizontal="true"
@@ -42,7 +42,7 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="No escape"
+            android:text="@string/Scen3"
             android:id="@+id/buttonFast"
             android:layout_below="@+id/buttonNormal"
             android:layout_centerHorizontal="true"

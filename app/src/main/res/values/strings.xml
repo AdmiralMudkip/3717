@@ -1,16 +1,35 @@
 <resources>
     <string name="app_name">PhysicsSimulation</string>
-
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-
     <string name="title_activity_main_menu">MainMenu</string>
-
     <string name="title_activity_settings_menu">SettingsMenu</string>
+
+    <string name="S">S</string>
+    <string name="M">M</string>
+    <string name="L">L</string>
     <string name="Stationary">Stationary</string>
     <string name="Merge">Merge</string>
     <string name="Add">Add</string>
     <string name="Remove">Remove</string>
     <string name="title_activity_scenario_menu">ScenarioMenu</string>
 
+    <!--Main menu-->
+    <string name="MainTitle">Physics Game</string>
+    <string name="Main1">Start Game</string>
+    <string name="Main2">Scenario Select</string>
+    <string name="Main3">Settings</string>
+
+    <!--Scenario Menu-->
+    <string name="ScenarioTitle">Scenario Select</string>
+    <string name="Scen1">Binary System</string>
+    <string name="Scen2">Elliptical Orbit</string>
+    <string name="Scen3">No Escape</string>
+
+    <!--Settings Menu-->
+    <string name="SettingsTitle">Settings</string>
+    <string name="Sett1">Slow Speed</string>
+    <string name="Sett2">Medium Speed</string>
+    <string name="Sett3">Fast Speed</string>
+    <string name="Sett4">Ludicrous Speed</string>
+    <string name="Sett5">Gone to Plaid</string>
+    <string name="Valve">Valve Time</string>
 </resources>

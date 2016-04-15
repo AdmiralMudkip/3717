@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="80dp"
-            android:text="Physics Game"
+            android:text="@string/MainTitle"
             android:textSize="50dp"
             android:textAlignment="center"
             android:layout_centerHorizontal="true"/>
@@ -21,7 +21,7 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Start Game"
+            android:text="@string/Main1"
             android:id="@+id/buttonStart"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
@@ -30,7 +30,7 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Scenario Select"
+            android:text="@string/Main2"
             android:id="@+id/buttonScenario"
             android:layout_below="@+id/buttonStart"
             android:layout_centerVertical="true"
@@ -40,7 +40,7 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Settings"
+            android:text="@string/Main3"
             android:id="@+id/buttonSettings"
             android:layout_below="@+id/buttonScenario"
             android:layout_centerHorizontal="true"

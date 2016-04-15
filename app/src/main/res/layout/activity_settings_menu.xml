@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="70dp"
-            android:text="Settings"
+            android:text="@string/SettingsTitle"
             android:textSize="50dp"
             android:textAlignment="center"
             android:id="@+id/ScenarioText"
@@ -22,7 +22,7 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Slow speed"
+            android:text="@string/Sett1"
             android:id="@+id/buttonSlow"
             android:layout_below="@+id/ScenarioText"
             android:layout_marginTop="60dp"
@@ -33,7 +33,7 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Normal Speed"
+            android:text="@string/Sett2"
             android:id="@+id/buttonNormal"
             android:layout_below="@+id/buttonSlow"
             android:layout_centerHorizontal="true"
@@ -42,7 +42,7 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Fast speed"
+            android:text="@string/Sett3"
             android:id="@+id/buttonFast"
             android:layout_below="@+id/buttonNormal"
             android:layout_centerHorizontal="true"
@@ -51,7 +51,7 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Ludicrous Speed"
+            android:text="@string/Sett4"
             android:id="@+id/buttonLudicrous"
             android:layout_below="@+id/buttonFast"
             android:layout_centerHorizontal="true"
@@ -60,12 +60,23 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Gone to Plaid"
+            android:text="@string/Sett5"
             android:id="@+id/buttonPlaid"
             android:layout_below="@+id/buttonLudicrous"
             android:layout_centerHorizontal="true"
             android:tag="5"
-            android:onClick="onClick"/>
+            android:onClick="onClick"
+            android:textStyle="bold|italic" />
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="@string/Valve"
+            android:id="@+id/ButtonValve"
+            android:layout_below="@+id/buttonLudicrous"
+            android:layout_centerHorizontal="true"
+            android:tag="5"
+            android:onClick="onClick" />
+
     </RelativeLayout>
 
     <FrameLayout
