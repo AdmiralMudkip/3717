@@ -35,17 +35,27 @@ public class Game extends AppCompatActivity {
             setContentView(f);
         }
 
+        cVas = (CanvasView) findViewById(R.id.canvas);
+
         switch (scenario) {
             case 0:
                 break;
             case 1: // binary system
-
+                cVas.particleArray[0] = new Particle(cVas.SCREEN_WIDTH/2, cVas.SCREEN_HEIGHT/2-20, .6, 0, 1000);
+                cVas.particleArray[1] = new Particle(cVas.SCREEN_WIDTH/2, cVas.SCREEN_HEIGHT/2+20, -.6, 0, 1000);
+                break;
             case 2: // elliptical orbit
-
+                cVas.particleArray[0] = new Particle(cVas.SCREEN_WIDTH/2, cVas.SCREEN_HEIGHT/2, 0, 0, 4000);
+                cVas.particleArray[0].stationary = true;
+                cVas.particleArray[1] = new Particle(cVas.SCREEN_WIDTH/2, cVas.SCREEN_HEIGHT/2+60, -1.4, 0, 100);
+                break;
             case 3: // no escape
+                cVas.particleArray[0] = new Particle(cVas.SCREEN_WIDTH/2, cVas.SCREEN_HEIGHT/2, 0, 0, 100000);
+                cVas.particleArray[0].stationary = true;
+                break;
         }
 
-        cVas = (CanvasView) findViewById(R.id.canvas);
+
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new Update(), 0, update); //update, time to first update, update interval
     }
@@ -182,6 +192,8 @@ class CanvasView extends View {
                         // ctor to create a new particle, also checks the ending position, and adds
                         // force if there's a difference between the start and end positions
                         particleArray[i] = new Particle(event.getX(), event.getY(), (x-event.getX())/32, (y-event.getY())/32, size);
+                        if (stationary)
+                            particleArray[i].stationary = true;
                         break;
                     }
                 }
