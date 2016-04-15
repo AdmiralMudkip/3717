@@ -25,7 +25,7 @@
             android:text="@string/Sett1"
             android:id="@+id/buttonSlow"
             android:layout_below="@+id/ScenarioText"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="50dp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:tag="1"
@@ -72,9 +72,9 @@
             android:layout_height="wrap_content"
             android:text="@string/Valve"
             android:id="@+id/ButtonValve"
-            android:layout_below="@+id/buttonLudicrous"
+            android:layout_below="@+id/buttonPlaid"
             android:layout_centerHorizontal="true"
-            android:tag="5"
+            android:tag="6"
             android:onClick="onClick" />
 
     </RelativeLayout>

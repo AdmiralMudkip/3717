@@ -30,7 +30,7 @@ public class SettingsMenu extends AppCompatActivity {
                 return;
             case "5":
                 Game.setUpdate(2);
-
+                return;
             case "6":
                 Game.updateValveTime();
                 String s = (Game.valveTime) ? "enabled" : "disabled";
