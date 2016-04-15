@@ -1,7 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="#0099cc"
     android:id="@+id/Background"
     tools:context=".Game">
@@ -34,7 +34,7 @@
             android:layout_alignParentStart="true">
 
             <RadioGroup
-                android:layout_width="200dp"
+                android:layout_width="160dp"
                 android:layout_height="75dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
@@ -46,6 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text="S"
+                    android:tag="S"
                     android:id="@+id/radioButton1"
                     android:layout_marginTop="20dp"
                     android:layout_marginStart="10dp"
@@ -57,6 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="M"
+                    android:tag="M"
                     android:id="@+id/radioButton2"
                     android:layout_marginTop="20dp"
                     android:layout_marginStart="10dp"
@@ -68,6 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="L"
+                    android:tag="L"
                     android:id="@+id/radioButton3"
                     android:layout_marginTop="20dp"
                     android:layout_marginStart="10dp"
@@ -86,8 +89,9 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Add"
-                    android:id="@+id/radioButton4"
+                    android:text="@string/Add"
+                    android:tag="A"
+                    android:id="@+id/radioAdd"
                     android:layout_marginEnd="40dp"
                     android:layout_marginRight="40dp"
                     android:checked="true"
@@ -96,11 +100,33 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Remove"
-                    android:id="@+id/radioButton5"
+                    android:text="@string/Remove"
+                    android:tag="R"
+                    android:id="@+id/radioRemove"
                     android:layout_marginBottom="4dp"
                     android:onClick="radioClick" />
             </RadioGroup>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Merge"
+                android:id="@+id/collision"
+                android:layout_alignTop="@+id/radioGroup2"
+                android:layout_toRightOf="@+id/radioGroup"
+                android:onClick="toggleMerge"
+                android:checked="true" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Stationary"
+                android:id="@+id/stationary"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/collision"
+                android:layout_toRightOf="@+id/radioGroup"
+                android:layout_toEndOf="@+id/radioGroup"
+                android:onClick="toggleStationary" />
         </RelativeLayout>
 
     </RelativeLayout>

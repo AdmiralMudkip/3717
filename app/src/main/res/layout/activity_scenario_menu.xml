@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0099cc"
-    tools:context=".SettingsMenu">
+    tools:context=".ScenarioMenu">
 
     <RelativeLayout
         android:id="@+id/fullscreen_content"
@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="70dp"
-            android:text="Settings"
+            android:text="Scenario Select"
             android:textSize="50dp"
             android:textAlignment="center"
             android:id="@+id/ScenarioText"
@@ -22,10 +22,10 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Slow speed"
+            android:text="Binary System"
             android:id="@+id/buttonSlow"
             android:layout_below="@+id/ScenarioText"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="90dp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:tag="1"
@@ -33,7 +33,7 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Normal Speed"
+            android:text="Elliptical Orbit"
             android:id="@+id/buttonNormal"
             android:layout_below="@+id/buttonSlow"
             android:layout_centerHorizontal="true"
@@ -42,29 +42,11 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Fast speed"
+            android:text="No escape"
             android:id="@+id/buttonFast"
             android:layout_below="@+id/buttonNormal"
             android:layout_centerHorizontal="true"
             android:tag="3"
-            android:onClick="onClick"/>
-        <Button
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:text="Ludicrous Speed"
-            android:id="@+id/buttonLudicrous"
-            android:layout_below="@+id/buttonFast"
-            android:layout_centerHorizontal="true"
-            android:tag="4"
-            android:onClick="onClick"/>
-        <Button
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:text="Gone to Plaid"
-            android:id="@+id/buttonPlaid"
-            android:layout_below="@+id/buttonLudicrous"
-            android:layout_centerHorizontal="true"
-            android:tag="5"
             android:onClick="onClick"/>
     </RelativeLayout>
 
@@ -85,5 +67,4 @@
 
         </LinearLayout>
     </FrameLayout>
-
 </FrameLayout>

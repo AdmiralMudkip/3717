@@ -3,6 +3,7 @@ package ca.bcit.techpro.jason.physicssimulation;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 public class MainMenu extends AppCompatActivity {
@@ -16,6 +17,11 @@ public class MainMenu extends AppCompatActivity {
 
     public void startGame(final View view){
         Intent i = new Intent(MainMenu.this, Game.class);
+        startActivity(i);
+    }
+
+    public void startScenario(final View view){
+        Intent i = new Intent(MainMenu.this, ScenarioMenu.class);
         startActivity(i);
     }
 

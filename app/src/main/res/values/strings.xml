@@ -7,5 +7,10 @@
     <string name="title_activity_main_menu">MainMenu</string>
 
     <string name="title_activity_settings_menu">SettingsMenu</string>
+    <string name="Stationary">Stationary</string>
+    <string name="Merge">Merge</string>
+    <string name="Add">Add</string>
+    <string name="Remove">Remove</string>
+    <string name="title_activity_scenario_menu">ScenarioMenu</string>
 
 </resources>

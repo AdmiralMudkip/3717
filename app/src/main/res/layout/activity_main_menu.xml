@@ -30,9 +30,19 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:text="Scenario Select"
+            android:id="@+id/buttonScenario"
+            android:layout_below="@+id/buttonStart"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:onClick="startScenario" />
+
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
             android:text="Settings"
             android:id="@+id/buttonSettings"
-            android:layout_below="@+id/buttonStart"
+            android:layout_below="@+id/buttonScenario"
             android:layout_centerHorizontal="true"
             android:onClick="startSettings"/>
     </RelativeLayout>
@@ -54,5 +64,4 @@
 
         </LinearLayout>
     </FrameLayout>
-
 </FrameLayout>
