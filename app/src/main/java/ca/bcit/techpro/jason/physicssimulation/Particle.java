@@ -8,7 +8,6 @@ import android.view.WindowManager;
 public class Particle {
     public double xPos, yPos, xVel, yVel;
     public int mass;
-    public boolean stationary = false;
 
     public Particle(double x, double y, double xv, double yv, int m){
         xPos = x;
@@ -26,51 +25,44 @@ public class Particle {
         double angle = Math.atan2(p2.yPos - p1.yPos, p2.xPos - p1.xPos);
         double xAccel = accel * Math.cos(angle);
         double yAccel = accel * Math.sin(angle);
-        if (!p1.stationary) {
-            p1.xVel += xAccel * p2.mass;
-            p1.yVel += yAccel * p2.mass;
-        }
-        if (!p2.stationary) {
-            p2.xVel -= xAccel * p1.mass;
-            p2.yVel -= yAccel * p1.mass;
-        }
+
+        p1.xVel += xAccel * p2.mass;
+        p1.yVel += yAccel * p2.mass;
+        p2.xVel -= xAccel * p1.mass;
+        p2.yVel -= yAccel * p1.mass;
     }
 
     // merge particles, checking the size of them to properly simulate the conservation of momentum
     public static void merge(Particle p1, Particle p2) {
-        if (p2.stationary) {
-            p1.stationary = true;
-        }
         if (p1.mass == p2.mass) {
-            p1.xPos = (p1.xPos + p2.xPos) / 2;
-            p1.yPos = (p1.yPos + p2.yPos) / 2;
-        } else if (p1.mass < p2.mass) {
+            p1.xPos = (p1.xPos+p2.xPos)/2;
+            p1.yPos = (p1.yPos+p2.yPos)/2;
+        }
+        else if (p1.mass < p2.mass) {
             p1.xPos = p2.xPos;
             p1.yPos = p2.yPos;
         }
-        double xVel = p1.xVel * p1.mass + p2.xVel * p2.mass;
-        double yVel = p1.yVel * p1.mass + p2.yVel * p2.mass;
+        double xVel = p1.xVel*p1.mass+p2.xVel*p2.mass;
+        double yVel = p1.yVel*p1.mass+p2.yVel*p2.mass;
         p1.mass += p2.mass;
-        p1.xVel = xVel / p1.mass;
-        p1.yVel = yVel / p1.mass;
+        p1.xVel = xVel/p1.mass;
+        p1.yVel = yVel/p1.mass;
     }
 
     // update this particle's position, applying the velocity and updating it's x and y coords,
     // checking against the bounds of the screen
     public void updatePos(){
-        if (!stationary) {
-            yVel = Math.min(yVel, 2);
-            if (xPos > CanvasView.SCREEN_WIDTH)
-                xVel = -Math.abs(xVel);
-            else if (xPos < 0)
-                xVel = Math.abs(xVel);
-            xPos += xVel;
+        yVel = Math.min(yVel,2);
+        if (xPos > CanvasView.SCREEN_WIDTH)
+            xVel = -Math.abs(xVel);
+        else if (xPos < 0)
+            xVel = Math.abs(xVel);
+        xPos += xVel;
 
-            if (yPos > CanvasView.SCREEN_HEIGHT)
-                yVel = -Math.abs(yVel);
-            else if (yPos < 0)
-                yVel = Math.abs(yVel);
-            yPos += yVel;
-        }
+        if (yPos > CanvasView.SCREEN_HEIGHT)
+            yVel = -Math.abs(yVel);
+        else if (yPos < 0)
+            yVel = Math.abs(yVel);
+        yPos += yVel;
     }
 }
