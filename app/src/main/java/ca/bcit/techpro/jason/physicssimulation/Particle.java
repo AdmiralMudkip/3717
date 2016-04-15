@@ -1,6 +1,7 @@
 package ca.bcit.techpro.jason.physicssimulation;
 
 public class Particle {
+    private static final int DISTANCE_SCALE = 14;
     public double xPosition, yPosition, xVelocity, yVelocity;
     public boolean stationary;
     public int mass;
@@ -18,7 +19,7 @@ public class Particle {
     public static void updateVelocity(Particle p1, Particle p2){
         double distanceX = p2.xPosition - p1.xPosition;
         double distanceY = p2.yPosition - p1.yPosition;
-        double distanceSquared = 14*(distanceX*distanceX + distanceY*distanceY);
+        double distanceSquared = DISTANCE_SCALE*(distanceX*distanceX + distanceY*distanceY);
         double oneOverDistanceCubed = 1/(distanceSquared*Math.sqrt(distanceSquared));
         double xAcceleration = distanceX * oneOverDistanceCubed;
         double yAcceleration = distanceY * oneOverDistanceCubed;
