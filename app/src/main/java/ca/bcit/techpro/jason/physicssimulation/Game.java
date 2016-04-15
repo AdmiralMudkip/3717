@@ -197,7 +197,7 @@ class CanvasView extends View {
             if (!add){
                 for (int i = 0; i < particleArray.length; i++) {
                     // calc the position of the touch relative to any object in the array
-                    if (particleArray[i] != null && (Math.pow(particleArray[i].xPosition - x, 2) + Math.pow(particleArray[i].yPosition - y, 2)) < particleArray[i].radius) {
+                    if (particleArray[i] != null && Math.sqrt((Math.pow(particleArray[i].xPosition - x, 2) + Math.pow(particleArray[i].yPosition - y, 2))) < particleArray[i].radius+32) {
                         // i'd destroy the particle if i could, but java doesn't use destructors
                         // garbage collection pls
                         particleArray[i] = null;
