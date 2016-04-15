@@ -15,6 +15,7 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
     }
 
+    // controllers for buttons, nothing interesting
     public void startGame(final View view){
         Intent i = new Intent(MainMenu.this, Game.class);
         startActivity(i);

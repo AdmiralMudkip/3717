@@ -85,6 +85,7 @@ public class Game extends AppCompatActivity {
         }
     }
 
+    // check boxes handlers
     public void toggleMerge(final View v){
         cVas.merge = !cVas.merge;
     }
@@ -146,6 +147,7 @@ class CanvasView extends View {
 
     // run through the entire loop,
     void physicsSim(){
+        // has to be done twice.  First, apply all the forces to everything from everything else
         for (int i = 0; i < particleArray.length; i++)
             if (particleArray[i] != null)
                 for (int j = i+1; j < particleArray.length; j++)
@@ -157,7 +159,7 @@ class CanvasView extends View {
                             Particle.merge(particleArray[i], particleArray[j]);
                             particleArray[j] = null;
                         }
-
+        // secondly, update the positions
         for (int i = 0; i < particleArray.length; i++)
             if (particleArray[i] != null)
                 particleArray[i].updatePos();
@@ -177,6 +179,8 @@ class CanvasView extends View {
                 for (int i = 0; i < particleArray.length; i++) {
                     // little bit of optimization, put the new one in the first empty spot
                     if (particleArray[i] == null) {
+                        // ctor to create a new particle, also checks the ending position, and adds
+                        // force if there's a difference between the start and end positions
                         particleArray[i] = new Particle(event.getX(), event.getY(), (x-event.getX())/32, (y-event.getY())/32, size);
                         break;
                     }
