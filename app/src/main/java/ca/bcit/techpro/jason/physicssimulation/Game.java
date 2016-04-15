@@ -122,8 +122,8 @@ class CanvasView extends View {
     public int size;
     private float x, y;
 
-    public static int SCREEN_WIDTH, SCREEN_HEIGHT, valveCounter = 0;
-
+    public static int SCREEN_WIDTH, SCREEN_HEIGHT, FAT_FINGER_DISTANCE;
+    public int valveCounter = 0;
     public boolean add = true, stationary = false, merge = true;
 
     public CanvasView(Context c, AttributeSet attrs) {
@@ -143,6 +143,7 @@ class CanvasView extends View {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         SCREEN_WIDTH = metrics.widthPixels;
         SCREEN_HEIGHT = metrics.heightPixels;
+        FAT_FINGER_DISTANCE = (int)(8*metrics.density);
     }
 
     /** onDraw clears the path and then adds each circle to the path and then paints that path to the
@@ -197,7 +198,7 @@ class CanvasView extends View {
             if (!add){
                 for (int i = 0; i < particleArray.length; i++) {
                     // calc the position of the touch relative to any object in the array
-                    if (particleArray[i] != null && Math.sqrt((Math.pow(particleArray[i].xPosition - x, 2) + Math.pow(particleArray[i].yPosition - y, 2))) < particleArray[i].radius+32) {
+                    if (particleArray[i] != null && Math.sqrt((Math.pow(particleArray[i].xPosition - x, 2) + Math.pow(particleArray[i].yPosition - y, 2))) < particleArray[i].radius+FAT_FINGER_DISTANCE) {
                         // i'd destroy the particle if i could, but java doesn't use destructors
                         // garbage collection pls
                         particleArray[i] = null;
